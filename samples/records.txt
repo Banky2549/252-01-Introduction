@@ -1,0 +1,6 @@
+Ada Lovelace:1815
+Grace Hopper:1906
+Dennis Ritchie:1941
+Linus Torvalds:abcd
+Ken Thompson:1943xyz
+Margaret Hamilton:1936
