@@ -16,9 +16,31 @@ int modern_parse_year(const char *record, int *out_year) {
        - on success, set *out_year and return 0
        - on failure, return -1
     */
-    (void)record;
-    (void)out_year;
-    return -1;
+    const char *colon = strchr(record, ':');
+    if (colon == NULL) {
+        return -1;
+    }
+
+    const char *num_str = colon + 1;
+    char *endptr;
+
+    errno = 0;
+    long val = strtol(num_str, &endptr, 10);
+
+    if (endptr == num_str) {
+        return -1;
+    }
+
+    if (*endptr != '\0') {
+        return -1;
+    }
+
+    if (errno == ERANGE) {
+        return -1;
+    }
+
+    *out_year = (int)val;
+    return 0;
 }
 
 int modern_make_slug(const char *name, char *out, size_t out_size) {
@@ -35,7 +57,11 @@ int modern_make_slug(const char *name, char *out, size_t out_size) {
     }
 
     for (i = 0; name[i] != '\0' && i + 1 < out_size; i++) {
-        out[i] = name[i];
+        if (name[i] == ' ') {
+            out[i] = '_';
+        } else {
+            out[i] = (char)tolower((unsigned char)name[i]);
+        }
     }
 
     if (name[i] != '\0') {
